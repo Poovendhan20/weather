@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Video Weather App</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="default">
+    
+    <video autoplay muted loop id="video-bg">
+        <source id="video-source" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="weather-app">
+        <div class="search-box">
+            <input type="text" id="city-input" placeholder="Enter city name..." autocomplete="off">
+            <button id="search-btn">Search</button>
+        </div>
+
+        <div class="weather-card" id="weather-display" style="display: none;">
+            <h2 id="city-name"></h2>
+            
+            <p id="temperature"></p>
+            <p id="description" class="weather-description"></p>
+            
+            <div class="details">
+                <div class="col">
+                    <p>Humidity</p>
+                    <p id="humidity"></p>
+                </div>
+                <div class="col">
+                    <p>Wind Speed</p>
+                    <p id="wind-speed"></p>
+                </div>
+            </div>
+        </div>
+
+        <p class="error-message" id="error-message"></p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
