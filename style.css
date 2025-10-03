@@ -67,6 +67,11 @@ body::after {
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 @keyframes iconPulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
@@ -91,6 +96,30 @@ body::after {
     animation: fadeInSlideUp 0.8s ease-out forwards;
     z-index: 10;
 }
+
+/* --- App Title Styling --- */
+#app-title {
+    font-size: 3.5em; 
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.9); 
+    margin-bottom: 20px; /* Reduced margin to make space for quote */
+    letter-spacing: 2px; 
+    animation: fadeInSlideUp 0.8s ease-out forwards 0s; 
+    opacity: 0; 
+}
+
+/* --- NEW: Weather Quote Styling --- */
+#weather-quote {
+    font-size: .7em;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 30px; /* Space before search box */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    animation: fadeIn 1.2s ease-out forwards 0.4s; /* Fade in after title */
+    opacity: 0;
+}
+
 
 /* Search Box and Input */
 .search-box { display: flex; margin-bottom: 30px; }
@@ -173,7 +202,7 @@ body::after {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    overflow-x: auto; /* Keep this to allow horizontal scrolling on touch devices */
+    overflow-x: auto; 
     padding-bottom: 10px;
 }
 
@@ -220,6 +249,8 @@ body::after {
 @media (max-width: 600px) {
     body { min-height: initial; padding: 20px 0; }
     .weather-app { padding: 25px; width: 95%; margin: auto; }
+    #app-title { font-size: 2.5em; margin-bottom: 20px; } 
+    #weather-quote { font-size: 1em; margin-bottom: 20px; } /* Adjust for mobile */
     #city-input, #search-btn { padding: 12px; font-size: 16px; }
     #city-name { font-size: 1.8em; }
     #temperature { font-size: 4em; }

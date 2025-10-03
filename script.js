@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // YOUR API KEY
     const apiKey = 'c8ae83e145ae85ea5a8a6857f9d8443f'; 
     const currentWeatherApiUrl = 'https://api.openweathermap.org/data/2.5/weather';
-    const forecastApiUrl = 'https://api.openweathermap.org/data/2.5/forecast'; // New API endpoint
+    const forecastApiUrl = 'https://api.openweathermap.org/data/2.5/forecast';
 
     const cityInput = document.getElementById('city-input');
     const searchBtn = document.getElementById('search-btn');
@@ -21,6 +21,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const descriptionEl = document.getElementById('description');
     const humidityEl = document.getElementById('humidity');
     const windSpeedEl = document.getElementById('wind-speed');
+
+    // NEW: Quote elements
+    const weatherQuoteEl = document.getElementById('weather-quote');
+    const quotes = [
+        "The sun always shines brightest after the rain.",
+        "Every cloud has a silver lining, even in the forecast.",
+        "No matter the weather, a warm heart always shines through.",
+        "Life is not about waiting for the storm to pass, but learning to dance in the rain.",
+        "Forecast: mostly sunny with a chance of brilliance.",
+        "Keep your face to the sunshine and you cannot see a shadow.",
+        "Bad weather always looks worse through a window.",
+        "A cloudy day is no match for a sunny disposition.",
+        "The best thing about rain is that it always stops.",
+        "May your day be filled with sunshine, or at least a good umbrella!"
+    ];
 
     // Helper to map OpenWeatherMap icon code to a Font Awesome class (used for forecast)
     function getWeatherIconClass(iconCode) {
@@ -47,20 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // NEW: Function to process 3-hour forecast into 5 daily forecasts
+    // Function to process 3-hour forecast into 5 daily forecasts
     function processForecastData(data) {
         const dailyData = {};
         const today = new Date().toDateString();
 
-        // Iterate over all 40 (5 days * 8 intervals) 3-hour forecasts
         data.list.forEach(item => {
-            const date = new Date(item.dt * 1000); // Convert Unix timestamp to milliseconds
-            const dateStr = date.toDateString(); // e.g., "Wed Oct 01 2025"
+            const date = new Date(item.dt * 1000); 
+            const dateStr = date.toDateString(); 
 
-            // Skip today's data as it's typically covered by the current weather card
             if (dateStr === today) return;
 
-            // Initialize daily entry if it doesn't exist
             if (!dailyData[dateStr]) {
                 dailyData[dateStr] = {
                     minTemp: item.main.temp,
@@ -69,20 +81,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     day: date.toLocaleDateString('en-US', { weekday: 'short' })
                 };
             } else {
-                // Update min/max temps
                 dailyData[dateStr].minTemp = Math.min(dailyData[dateStr].minTemp, item.main.temp);
                 dailyData[dateStr].maxTemp = Math.max(dailyData[dateStr].maxTemp, item.main.temp);
             }
         });
 
-        // Convert the object to an array and slice to get the next 5 days
         const forecastArray = Object.values(dailyData).slice(0, 5);
         displayForecast(forecastArray);
     }
     
-    // NEW: Function to inject forecast cards into HTML
+    // Function to inject forecast cards into HTML
     function displayForecast(forecasts) {
-        forecastCards.innerHTML = ''; // Clear previous forecasts
+        forecastCards.innerHTML = ''; 
         
         if (forecasts.length === 0) {
             forecastContainer.style.display = 'none';
@@ -104,8 +114,13 @@ document.addEventListener('DOMContentLoaded', () => {
         forecastContainer.style.display = 'block';
     }
 
+    // NEW: Function to display a random weather quote
+    function displayRandomQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        weatherQuoteEl.textContent = `"${quotes[randomIndex]}"`;
+    }
 
-    // 3. Dynamic Video Switching Function
+    // Dynamic Video Switching Function
     function updateBackgroundByCondition(condition) {
         const normalizedCondition = condition.toLowerCase(); 
         let videoFile = 'default.mp4'; 
@@ -131,16 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // 1. Unified Fetch Function
+    // Unified Fetch Function
     async function fetchWeatherData(city) {
         if (!city) {
             displayError('Please enter a city name.');
             return;
         }
 
-        // 1. Fetch Current Weather
         const currentWeatherUrl = `${currentWeatherApiUrl}?q=${city}&appid=${apiKey}&units=metric`;
-        // 2. Fetch 5-Day Forecast
         const forecastUrl = `${forecastApiUrl}?q=${city}&appid=${apiKey}&units=metric`;
         
         try {
@@ -156,12 +169,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (currentData.cod === 200 && forecastData.cod === '200') {
                 updateWeatherDisplay(currentData);
-                processForecastData(forecastData); // Process and display forecast
+                processForecastData(forecastData); 
                 updateBackgroundByCondition(currentData.weather[0].main); 
                 displayError(''); 
+                displayRandomQuote(); // Display a new quote on successful search
             } else {
                 updateWeatherDisplay(null);
-                displayForecast([]); // Clear forecast
+                displayForecast([]); 
                 updateBackgroundByCondition('default'); 
                 displayError(`City not found: ${city}. Please check the spelling.`);
             }
@@ -174,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 2. Update the HTML with fetched data and trigger animations
+    // Update the HTML with fetched data and trigger animations
     function updateWeatherDisplay(data) {
         if (data) {
             weatherDisplay.style.display = 'none'; 
@@ -196,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. Display Error Messages
+    // Display Error Messages
     function displayError(message) {
         errorMsg.textContent = message;
     }
@@ -215,5 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    updateBackgroundByCondition('default'); 
+    updateBackgroundByCondition('default');  
+    displayRandomQuote(); // Display a quote on initial load
 });
